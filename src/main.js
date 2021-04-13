@@ -25,9 +25,6 @@ Vue.prototype.eventHub = new Vue({})
 // ajax
 Vue.prototype.$http = axios
 Vue.prototype.$api = Api
-// 添加实例方法
-// 调用方式： this.$MessageBox.then(...)
-Vue.prototype.$message = ElementUi.Message
 
 // 拿到全局配置项，存储在window对象下，window.localConfig
 axios.get('/localConfig.json').then((response) => {
