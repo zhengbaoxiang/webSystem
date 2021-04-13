@@ -62,52 +62,52 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            menuList: [], //左侧菜单数据
-            iconsObj: {
-                125: 'iconfont icon-user',
-                103: 'iconfont icon-tijikongjian',
-                101: 'iconfont icon-shangpin',
-                102: 'iconfont icon-danju',
-                145: 'iconfont icon-baobiao',
-            },
-            isCollapse: false,
-            activePath: '', //被激活的链接地址
-        };
+  data () {
+    return {
+      menuList: [], // 左侧菜单数据
+      iconsObj: {
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
+      },
+      isCollapse: false,
+      activePath: '' // 被激活的链接地址
+    }
+  },
+  created () {
+    this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
+  },
+  mounted () {},
+  methods: {
+    logout () {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
     },
-    created() {
-        this.getMenuList();
-        this.activePath = window.sessionStorage.getItem('activePath');
+    // 获取菜单
+    getMenuList () {
+      this.$http.get('menus').then(res => {
+        console.log(res)
+        if (res.data.meta.status !== 200) {
+          this.$message.error(res.meta.msg)
+          return
+        }
+        this.menuList = res.data.data
+      })
     },
-    mounted() {},
-    methods: {
-        logout() {
-            window.sessionStorage.clear();
-            this.$router.push('/login');
-        },
-        //获取菜单
-        getMenuList() {
-            this.$http.get('menus').then(res => {
-                console.log(res);
-                if (res.data.meta.status != 200) {
-                    this.$message.error(res.meta.msg);
-                    return;
-                }
-                this.menuList = res.data.data;
-            });
-        },
-        //点击按钮切换菜单的折叠展开事件
-        toggleCollapse() {
-            this.isCollapse = !this.isCollapse;
-        },
-        //保存链接的激活状态
-        saveNavState(activePath) {
-            window.sessionStorage.setItem('activePath', activePath);
-            this.activePath = activePath;
-        },
+    // 点击按钮切换菜单的折叠展开事件
+    toggleCollapse () {
+      this.isCollapse = !this.isCollapse
     },
-};
+    // 保存链接的激活状态
+    saveNavState (activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .home-container {
