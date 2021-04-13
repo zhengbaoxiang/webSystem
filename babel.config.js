@@ -1,5 +1,6 @@
 module.exports = {
-  presets: ["@vue/cli-plugin-babel/preset"],
+  presets: ['@vue/cli-plugin-babel/preset']
+  // element ui 按需引入配置
   // plugins: [
   //   [
   //     'component',
@@ -9,4 +10,4 @@ module.exports = {
   //     }
   //   ]
   // ]
-};
+}

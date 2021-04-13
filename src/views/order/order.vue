@@ -30,8 +30,8 @@
                 ></el-table-column>
                 <el-table-column label="是否付款" prop="pay_status" align="center">
                     <template slot-scope="scope">
-                        <el-tag type="success" v-if="scope.row.pay_status == '1'">已付款</el-tag>
-                        <el-tag type="danger" v-if="scope.row.pay_status == '0'">未付款</el-tag>
+                        <el-tag type="success" v-if="scope.row.pay_status === '1'">已付款</el-tag>
+                        <el-tag type="danger" v-if="scope.row.pay_status === '0'">未付款</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否发货" prop="is_send" align="center"></el-table-column>
@@ -109,78 +109,78 @@
     </div>
 </template>
 <script>
-import cityData from './citydata.js';
+import cityData from './citydata.js'
 export default {
-    data() {
-        return {
-            queryInfo: {
-                query: '', //查询条件
-                pagenum: 1, //页码
-                pagesize: 10, //每页显示条数
-            },
-            total: 0,
-            orderList: [],
-            addressVisible: false,
-            addressForm: {
-                address1: [],
-                address2: '',
-            },
-            addressFormRules: {
-                address1: [{ required: true, message: '请选择选择省市区县', trigger: 'blur' }],
-                address2: [{ required: true, message: '请填写详细地址', trigger: 'blur' }],
-            },
-            cityData,
-            progressVisible: false,
-            reverse: false,
-            timeList: [],
-        };
+  data () {
+    return {
+      queryInfo: {
+        query: '', // 查询条件
+        pagenum: 1, // 页码
+        pagesize: 10 // 每页显示条数
+      },
+      total: 0,
+      orderList: [],
+      addressVisible: false,
+      addressForm: {
+        address1: [],
+        address2: ''
+      },
+      addressFormRules: {
+        address1: [{ required: true, message: '请选择选择省市区县', trigger: 'blur' }],
+        address2: [{ required: true, message: '请填写详细地址', trigger: 'blur' }]
+      },
+      cityData,
+      progressVisible: false,
+      reverse: false,
+      timeList: []
+    }
+  },
+  created () {
+    this.getOrderList()
+  },
+  methods: {
+    getOrderList () {
+      this.$http
+        .get('orders', {
+          params: this.queryInfo
+        })
+        .then(res => {
+          if (res.data.meta.status !== 200) {
+            return this.$message.error('获取订单列表失败!!!')
+          }
+          console.log(res.data)
+          this.orderList = res.data.data.goods
+          this.total = res.data.data.total
+        })
     },
-    created() {
-        this.getOrderList();
+    handleSizeChange (newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getOrderList()
     },
-    methods: {
-        getOrderList() {
-            this.$http
-                .get('orders', {
-                    params: this.queryInfo,
-                })
-                .then(res => {
-                    if (res.data.meta.status != 200) {
-                        return this.$message.error('获取订单列表失败!!!');
-                    }
-                    console.log(res.data);
-                    this.orderList = res.data.data.goods;
-                    this.total = res.data.data.total;
-                });
-        },
-        handleSizeChange(newSize) {
-            this.queryInfo.pagesize = newSize;
-            this.getOrderList();
-        },
-        handleCurrentChange(newPage) {
-            this.queryInfo.pagenum = newPage;
-            this.getOrderList();
-        },
-        //展示修改地址的对话框
-        showBox() {
-            this.addressVisible = true;
-        },
-        //弹框关闭事件
-        addressClosed() {
-            this.$refs.addressFormRef.resetFields();
-        },
-        // 查看物流
-        showProgressBox() {
-            this.$http.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/';
-            this.$http.get('/kuaidi/YT4781863654577').then(res => {
-                console.log('落落落落');
-                console.log(res.data.data);
-                this.timeList = res.data.data;
-            });
-            this.progressVisible = true;
-        },
+    handleCurrentChange (newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getOrderList()
     },
-};
+    // 展示修改地址的对话框
+    showBox () {
+      this.addressVisible = true
+    },
+    // 弹框关闭事件
+    addressClosed () {
+      this.$refs.addressFormRef.resetFields()
+    },
+    // 查看物流
+    showProgressBox () {
+      this.$http.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
+      this.$http.get('/kuaidi/YT4781863654577').then(res => {
+        console.log('落落落落')
+        console.log(res.data.data)
+        this.timeList = res.data.data
+      })
+      this.progressVisible = true
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 .el-cascader {

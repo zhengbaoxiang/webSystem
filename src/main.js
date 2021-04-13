@@ -1,54 +1,39 @@
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import './plugins/element.js';
-//导入全局样式表
-import './assets/css/global.css';
-// 导入字体图标
-import './assets/fonts/iconfont.css';
-import TreeTable from 'vue-table-with-tree-grid';
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+// import './plugins/element.js' // 按需引入，减少体积
+import ElementUi from 'element-ui' // 引入整个ElementUi组件
+import 'element-ui/lib/theme-chalk/index.css' // 引入所有样式
+// import MintUI from 'mint-ui' //引入整个MintUI组件
+// import './assets/css/global.css' // 导入全局样式表
+import style from './assets/css/global.css' // 导入全局样式表
+import './assets/fonts/iconfont.css'// 导入字体图标
+import axios from 'axios'
+import axiosUtils from './utils/axiosUtils'
+import Api from './utils/api'
+import components from './components/index'
 
-//导入富文本编辑器
-import VueQuillEditor from 'vue-quill-editor';
-// 导入富文本编辑器样对应的式
-import 'quill/dist/quill.core.css';
-import 'quill/dist/quill.snow.css';
-import 'quill/dist/quill.bubble.css';
+Vue.config.productionTip = false
 
-import axios from 'axios';
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'; //设置axios请求的根路径
+// 全局注册
+Vue.use(ElementUi) // 引入ui框架
+// Vue.use(MintUI) // 引入ui框架
+Vue.use(style) // 样式重置
+Vue.use(components) // 注册自己的components
+// 建立事件中心
+Vue.prototype.eventHub = new Vue({})
+// ajax
+Vue.prototype.$http = axios
+Vue.prototype.$api = Api
 
-// console.log(axios);
-axios.interceptors.request.use(config => {
-    config.headers.Authorization = window.sessionStorage.getItem('token');
-    // 最后必须return config
-    return config;
-});
-
-Vue.prototype.$http = axios;
-
-Vue.config.productionTip = false;
-
-//全局注册
-Vue.component('tree-table', TreeTable);
-//将富文本编辑器注册为全局可用的组件
-Vue.use(VueQuillEditor);
-
-Vue.filter('dateFormat', function (originVal) {
-    const dt = new Date(originVal);
-
-    const y = dt.getFullYear();
-    const m = (dt.getMonth() + 1 + '').padStart(2, '0');
-    const d = (dt.getDate() + '').padStart(2, '0');
-
-    const hh = (dt.getHours() + '').padStart(2, '0');
-    const mm = (dt.getMinutes() + '').padStart(2, '0');
-    const ss = (dt.getSeconds() + '').padStart(2, '0');
-
-    return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
-});
+// 拿到全局配置项，存储在window对象下，window.localConfig
+axios.get('/localConfig.json').then((response) => {
+  window.localConfig = response.data
+  // axios进行初始化
+  axiosUtils.axiosInit()
+})
 
 new Vue({
-    router,
-    render: h => h(App),
-}).$mount('#app');
+  router,
+  render: h => h(App)
+}).$mount('#app')

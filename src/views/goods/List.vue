@@ -89,71 +89,72 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            queryInfo: {
-                query: '',
-                pagenum: 1,
-                pagesize: 10,
-            },
-            goodslist: [], //商品列表
-            total: 0,
-        };
+  data () {
+    return {
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 10
+      },
+      goodslist: [], // 商品列表
+      total: 0
+    }
+  },
+  created () {
+    this.getGoodsList()
+  },
+  methods: {
+    getGoodsList () {
+      this.$http
+        .get('goods', {
+          params: this.queryInfo
+        })
+        .then(res => {
+          if (res.data.meta.status !== 200) {
+            return this.$message.error('获取商品列表失败！！！')
+          }
+          console.log(res.data.data)
+          this.goodslist = res.data.data.goods
+          this.total = res.data.data.total
+        })
     },
-    created() {
-        this.getGoodsList();
+    handleSizeChange (newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getGoodsList()
     },
-    methods: {
-        getGoodsList() {
-            this.$http
-                .get('goods', {
-                    params: this.queryInfo,
-                })
-                .then(res => {
-                    if (res.data.meta.status != 200) {
-                        return this.$message.error('获取商品列表失败！！！');
-                    }
-                    console.log(res.data.data);
-                    this.goodslist = res.data.data.goods;
-                    this.total = res.data.data.total;
-                });
-        },
-        handleSizeChange(newSize) {
-            this.queryInfo.pagesize = newSize;
-            this.getGoodsList();
-        },
-        handleCurrentChange(newPage) {
-            this.queryInfo.pagenum = newPage;
-            this.getGoodsList();
-        },
-        // 删除按钮
-        removeById(row) {
-            this.$confirm('此操作会永久删除该商品，是否继续？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-            })
-                .then(res => {
-                    this.$http.delete(`goods/${row}`).then(res => {
-                        if (res.data.meta.status != 200) {
-                            return this.$message.error('删除失败');
-                        }
-                        this.$message.success('删除成功！！！');
-                        this.getGoodsList();
-                    });
-                })
-                .catch(err => {
-                    return this.$message.info('您取消了删除');
-                });
-        },
-        // 编辑按钮
-        editClick(row) {},
-        // 添加商品按钮
-        goAddPage() {
-            this.$router.push('/goods/add');
-        },
+    handleCurrentChange (newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getGoodsList()
     },
-};
+    // 删除按钮
+    removeById (row) {
+      this.$confirm('此操作会永久删除该商品，是否继续？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(res => {
+          this.$http.delete(`goods/${row}`).then(res => {
+            if (res.data.meta.status !== 200) {
+              return this.$message.error('删除失败')
+            }
+            this.$message.success('删除成功！！！')
+            this.getGoodsList()
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          return this.$message.info('您取消了删除')
+        })
+    },
+    // 编辑按钮
+    editClick (row) {},
+    // 添加商品按钮
+    goAddPage () {
+      this.$router.push('/goods/add')
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 </style>
