@@ -71,7 +71,7 @@
                         <el-form-item
                             :label="item.attr_name"
                             v-for="item in manyTableData"
-                            :key="item.attr_id"
+                            :key="item.attrId"
                         >
                             <!-- 复选框 -->
                             <el-checkbox-group v-model="item.attr_vals">
@@ -89,7 +89,7 @@
                         <el-form-item
                             :label="item.attr_name"
                             v-for="item in onlyTableData"
-                            :key="item.attr_id"
+                            :key="item.attrId"
                         >
                             <el-input v-model="item.attr_vals"></el-input>
                         </el-form-item>
@@ -292,12 +292,12 @@ export default {
         // console.log(this.addForm);
         // 处理动态参数
         this.manyTableData.forEach(item => {
-          const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals.join(',') }
+          const newInfo = { attrId: item.attrId, attr_value: item.attr_vals.join(',') }
           this.addForm.attrs.push(newInfo)
         })
         // 处理静态属性
         this.onlyTableData.forEach(item => {
-          const newInfo = { attr_id: item.attr_id, attr_value: item.attr_vals }
+          const newInfo = { attrId: item.attrId, attr_value: item.attr_vals }
           this.addForm.attrs.push(newInfo)
         })
 

@@ -1,14 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-// import './plugins/element.js' //引入部分组件，减少性能损耗
+// import './plugins/element.js' // 按需引入，减少体积
 import ElementUi from 'element-ui' // 引入整个ElementUi组件
+import 'element-ui/lib/theme-chalk/index.css' // 引入所有样式
 // import MintUI from 'mint-ui' //引入整个MintUI组件
+// import './assets/css/global.css' // 导入全局样式表
 import style from './assets/css/global.css' // 导入全局样式表
 import './assets/fonts/iconfont.css'// 导入字体图标
 import axios from 'axios'
 import axiosUtils from './utils/axiosUtils'
-import api from './utils/api'
+import Api from './utils/api'
 import components from './components/index'
 
 Vue.config.productionTip = false
@@ -22,11 +24,10 @@ Vue.use(components) // 注册自己的components
 Vue.prototype.eventHub = new Vue({})
 // ajax
 Vue.prototype.$http = axios
-Vue.prototype.$api = api
+Vue.prototype.$api = Api
 // 添加实例方法
 // 调用方式： this.$MessageBox.then(...)
-Vue.prototype.$MessageBox = ElementUi.MessageBox
-Vue.prototype.$Toast = ElementUi.Toast
+Vue.prototype.$message = ElementUi.Message
 
 // 拿到全局配置项，存储在window对象下，window.localConfig
 axios.get('/localConfig.json').then((response) => {

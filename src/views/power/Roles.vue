@@ -212,6 +212,7 @@ export default {
             })
         })
         .catch(err => {
+          console.log(err)
           this.$message.info('取消了删除')
         })
     },
@@ -333,6 +334,7 @@ export default {
           })
         })
         .catch(err => {
+          console.log(err)
           return this.$message.info('您已取消删除')
         })
     }

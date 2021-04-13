@@ -78,11 +78,12 @@ export default {
       this.$refs.loginFormRef.validate((valid) => {
         console.log(valid) // 是一个布尔值，验证通过为true
         if (!valid) return
-        const params =  {
-            username: this.loginForm.username,
-            password: this.loginForm.password
-          }
-       this.$api.login(params)
+        const params = {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        }
+        console.log(this.$api)
+        this.$api.login(params)
           .then((res) => {
             console.log(res.data)
             if (res.data.meta.status !== 200) {
@@ -107,6 +108,11 @@ export default {
           .catch((e) => {
             console.log(e)
             window.sessionStorage.setItem('token', 'adsfasdfasdfasd')
+            this.$message({
+              message: '本地登录',
+              type: 'success',
+              duration: 1000
+            })
             setTimeout(() => {
               this.$router.push('/home')
             }, 1000)

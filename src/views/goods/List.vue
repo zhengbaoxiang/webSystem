@@ -143,6 +143,7 @@ export default {
           })
         })
         .catch(err => {
+          console.log(err)
           return this.$message.info('您取消了删除')
         })
     },

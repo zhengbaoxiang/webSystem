@@ -9,10 +9,6 @@ const Api = {
   getMenuList () {
     return axios.get('menus')
   },
-
-
-
-
   // 列表
   getFileList: (arg) => {
     return axios.post('/list', arg)
@@ -30,9 +26,7 @@ const Api = {
     return axios.put('/order/cancel', qs.stringify({
       id
     }))
-  },
+  }
 }
 
-export {
-  Api,
-}
+export default Api

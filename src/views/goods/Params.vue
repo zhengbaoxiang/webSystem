@@ -90,7 +90,7 @@
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-edit"
-                                    @click="showEditDialog(scope.row.attr_id)"
+                                    @click="showEditDialog(scope.row.attrId)"
                                 >
                                     编辑
                                 </el-button>
@@ -98,7 +98,7 @@
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-delete"
-                                    @click="removeParams(scope.row.attr_id)"
+                                    @click="removeParams(scope.row.attrId)"
                                 >
                                     删除
                                 </el-button>
@@ -157,7 +157,7 @@
                                     size="mini"
                                     type="primary"
                                     icon="el-icon-edit"
-                                    @click="showEditDialog(scope.row.attr_id)"
+                                    @click="showEditDialog(scope.row.attrId)"
                                 >
                                     编辑
                                 </el-button>
@@ -165,7 +165,7 @@
                                     size="mini"
                                     type="danger"
                                     icon="el-icon-delete"
-                                    @click="removeParams(scope.row.attr_id)"
+                                    @click="removeParams(scope.row.attrId)"
                                 >
                                     删除
                                 </el-button>
@@ -322,9 +322,9 @@ export default {
       })
     },
     // 编辑按钮点击事件
-    showEditDialog (attr_id) {
+    showEditDialog (attrId) {
       this.$http
-        .get(`categories/${this.cateId}/attributes/${attr_id}`, {
+        .get(`categories/${this.cateId}/attributes/${attrId}`, {
           params: {
             attr_sel: this.activeName
           }
@@ -350,7 +350,7 @@ export default {
       this.$refs.editFormRef.validate(valid => {
         if (!valid) return
         this.$http
-          .put(`categories/${this.cateId}/attributes/${this.editForm.attr_id}`, {
+          .put(`categories/${this.cateId}/attributes/${this.editForm.attrId}`, {
             attr_name: this.editForm.attr_name,
             attr_sel: this.activeName
           })
@@ -366,7 +366,7 @@ export default {
     },
 
     // 删除按钮点击事件
-    removeParams (attr_id) {
+    removeParams (attrId) {
       this.$confirm('确认要删除吗？？？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -374,7 +374,7 @@ export default {
       })
         .then(res => {
           this.$http
-            .delete(`categories/${this.cateId}/attributes/${attr_id}`)
+            .delete(`categories/${this.cateId}/attributes/${attrId}`)
             .then(res => {
               if (res.data.meta.status !== 200) {
                 return this.$message.error('删除参数失败！！！')
@@ -384,6 +384,7 @@ export default {
             })
         })
         .catch(err => {
+          console.log(err)
           return this.$message.info('取消删除操作')
         })
     },
@@ -406,7 +407,7 @@ export default {
     // 将对 attr_val 的操作保存到数据库
     saveAttrVals (row) {
       this.$http
-        .put(`categories/${this.cateId}/attributes/${row.attr_id}`, {
+        .put(`categories/${this.cateId}/attributes/${row.attrId}`, {
           attr_name: row.attr_name,
           attr_sel: row.attr_sel,
           attr_vals: row.attr_vals.join(' ')

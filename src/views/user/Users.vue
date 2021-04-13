@@ -213,18 +213,29 @@ export default {
   },
   methods: {
     getUserList () {
-      this.$http
-        .get('users', {
-          params: this.queryInfo
-        })
-        .then(res => {
-          console.log(res)
-          if (res.data.meta.status !== 200) {
-            return this.$message.error('获取用户列表失败')
-          }
-          this.userList = res.data.data.users
-          this.total = res.data.data.total
-        })
+      //   this.$api.getMenuList()
+    //     .then(res => {
+    //       console.log(res)
+    //       if (res.data.meta.status !== 200) {
+    //         this.$message.error(res.meta.msg)
+    //         return
+    //       }
+    //       this.menuList = res.data.data
+    //     })
+    //     .catch(() => {
+    //     })
+      const res = {
+        'data': {
+          'total': 4,
+          'pagenum': 1,
+          'users': [
+            { 'id': 500, 'role_name': '超级管理员', 'username': 'admin', 'create_time': 1486720211, 'mobile': '12345678', 'email': 'adsfad@qq.com', 'mg_state': true },
+            { 'id': 502, 'role_name': '测试角色2', 'username': 'linken', 'create_time': 1486720211, 'mobile': '1213213123', 'email': 'asdf@qq.com', 'mg_state': false }
+          ]
+        },
+        'meta': { 'msg': '获取管理员列表成功', 'status': 200 } }
+      this.userList = res.data.users
+      this.total = res.data.total
     },
     // 监听 pagesize 改变事件
     handleSizeChange (newSize) {
@@ -241,13 +252,13 @@ export default {
     // 监听switch开关状态的改变
     userStateChanged (userinfo) {
       console.log(userinfo)
-      this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`).then(res => {
-        if (res.data.meta.status !== 200) {
-          userinfo.mg_state = !userinfo.mg_state
-          return this.$message.error('更新用户状态失败！')
-        }
-        this.$message.success('更新用户状态成功')
-      })
+      // this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`).then(res => {
+      //   if (res.data.meta.status !== 200) {
+      //     userinfo.mg_state = !userinfo.mg_state
+      //     return this.$message.error('更新用户状态失败！')
+      //   }
+      this.$message.success('更新用户状态成功')
+      // })
     },
     // 监听dialog对话框关闭事件
     addDialogClosed () {

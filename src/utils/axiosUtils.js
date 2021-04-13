@@ -1,5 +1,4 @@
 import axios from 'axios'
-import MyUtils from './myUtils'
 // import MintUI from 'mint-ui'
 import promiseFinally from 'promise.prototype.finally'
 promiseFinally.shim()
@@ -15,18 +14,20 @@ const axiosUtils = {
       if (response.data) {
         return response
       } else {
-        console.log('发生异常')
+        console.log('响应异常')
         return Promise.reject(response)
       }
     }, function (error) {
       // 对响应错误 reject
+      console.log('发生异常')
       return Promise.reject(error)
     })
 
     // 3.添加token放入header
     axios.interceptors.request.use(
       config => {
-        let token = MyUtils.getItem('token')
+        let token = window.sessionStorage.getItem('token')
+        // console.log(token)
         if (token) {
           config.headers.token = token
           config.headers.Authorization = token
