@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    redirect: '/welcome',
+    redirect: '/reports',
     meta: { ishome: true, keepAlive: true },
     component: () => import('../views/Home.vue'),
     children: [

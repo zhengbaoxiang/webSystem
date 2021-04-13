@@ -101,6 +101,12 @@ export default {
     //     })
       const res = {
         'data': [
+          { 'id': 145,
+            'order': 0,
+            'authName': '首页',
+            'path': 'reports'
+            // 'children': [{ 'id': 146, 'authName': '数据报表', 'path': 'reports', 'children': [], 'order': null }]
+          },
           { 'id': 125,
             'order': 1,
             'authName': '用户管理',
@@ -129,13 +135,8 @@ export default {
             'authName': '订单管理',
             'path': 'orders',
             'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [], 'order': null }]
-          },
-          { 'id': 145,
-            'order': 5,
-            'authName': '数据统计',
-            'path': 'reports',
-            'children': [{ 'id': 146, 'authName': '数据报表', 'path': 'reports', 'children': [], 'order': null }]
           }
+
         ],
         'meta': { 'msg': '获取菜单列表成功', 'status': 200 } }
       this.menuList = res.data
