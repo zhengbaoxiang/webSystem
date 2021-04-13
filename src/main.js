@@ -8,6 +8,7 @@ import style from './assets/css/global.css' // 导入全局样式表
 import './assets/fonts/iconfont.css'// 导入字体图标
 import axios from 'axios'
 import axiosUtils from './utils/axiosUtils'
+import api from './utils/api'
 import components from './components/index'
 
 Vue.config.productionTip = false
@@ -21,6 +22,7 @@ Vue.use(components) // 注册自己的components
 Vue.prototype.eventHub = new Vue({})
 // ajax
 Vue.prototype.$http = axios
+Vue.prototype.$api = api
 // 添加实例方法
 // 调用方式： this.$MessageBox.then(...)
 Vue.prototype.$MessageBox = ElementUi.MessageBox

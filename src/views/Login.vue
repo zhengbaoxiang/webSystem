@@ -78,11 +78,11 @@ export default {
       this.$refs.loginFormRef.validate((valid) => {
         console.log(valid) // 是一个布尔值，验证通过为true
         if (!valid) return
-        this.$http
-          .post('login', {
+        const params =  {
             username: this.loginForm.username,
             password: this.loginForm.password
-          })
+          }
+       this.$api.login(params)
           .then((res) => {
             console.log(res.data)
             if (res.data.meta.status !== 200) {

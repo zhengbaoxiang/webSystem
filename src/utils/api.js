@@ -1,21 +1,31 @@
 import axios from 'axios'
 import qs from 'qs'
 
-// 订单api
-const orderApi = {
+// api使用  this.$api.getMenuList()
+const Api = {
+  login (arg) {
+    return axios.post('login', arg)
+  },
+  getMenuList () {
+    return axios.get('menus')
+  },
+
+
+
+
   // 列表
-  getOrderList: (arg) => {
-    return axios.post('/order/orders', arg)
+  getFileList: (arg) => {
+    return axios.post('/list', arg)
   },
   // 详情
-  getOrderDetail: id => {
-    return axios.get('/order', {
+  getDetail: id => {
+    return axios.get('/detail', {
       params: {
         id
       }
     })
   },
-  // 订单取消
+  // 取消
   cancelOrder: id => {
     return axios.put('/order/cancel', qs.stringify({
       id
@@ -24,5 +34,5 @@ const orderApi = {
 }
 
 export {
-  orderApi,
+  Api,
 }

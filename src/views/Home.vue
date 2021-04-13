@@ -88,7 +88,8 @@ export default {
     },
     // 获取菜单
     getMenuList () {
-      this.$http.get('menus').then(res => {
+      this.$api.getMenuList()
+      .then(res => {
         console.log(res)
         if (res.data.meta.status !== 200) {
           this.$message.error(res.meta.msg)
