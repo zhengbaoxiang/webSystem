@@ -1,29 +1,23 @@
 <template>
-    <div>
-        <!-- 面包屑导航区域 -->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>数据统计</el-breadcrumb-item>
-            <el-breadcrumb-item>数据报表</el-breadcrumb-item>
-        </el-breadcrumb>
-
-            <!-- 2 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-        <el-card>
-          <el-col :span="12">
-            <div id="pieId" style="width: 500px; height: 300px"></div>
-          </el-col>
-          <el-col :span="12">
-            <div id="barId2" style="width: 500px; height: 300px"></div>
-          </el-col>
-
-        </el-card>
-        <el-card>
-            <div id="barId" style="width: 750px; height: 400px"></div>
-        </el-card>
-        <el-card>
-            <div id="LineId" style="width: 750px; height: 350px"></div>
-        </el-card>
-    </div>
+  <div>            <!-- 2 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <el-card>
+      <el-col :span="6">
+        <div id="pieId" style="height: 300px"></div>
+      </el-col>
+      <el-col :span="12">
+        <div id="pieId2" style="height: 300px"></div>
+      </el-col>
+      <el-col :span="6">
+        <div id="barId2" style="height: 300px"></div>
+      </el-col>
+    </el-card>
+    <el-card>
+        <div id="barId" style="width: 750px; height: 400px"></div>
+    </el-card>
+    <el-card>
+        <div id="LineId" style="width: 750px; height: 350px"></div>
+    </el-card>
+  </div>
 </template>
 <script>
 // 1 导入echarts
@@ -47,6 +41,7 @@ export default {
   mounted () {
     // 3 基于准备好的dom，初始化echarts实例
     this.pieChart = echarts.init(document.getElementById('pieId'))
+    this.pieChart2 = echarts.init(document.getElementById('pieId2'))
     this.barChart = echarts.init(document.getElementById('barId'))
     this.barChart2 = echarts.init(document.getElementById('barId2'))
     this.lineChart = echarts.init(document.getElementById('LineId'))
@@ -60,6 +55,7 @@ export default {
     getData () {
       console.log('获取图表数据')
       this.drawPie()
+      this.drawPie2()
       this.drawBar()
       this.drawBar2()
       this.dawLine()
@@ -167,6 +163,86 @@ export default {
       // 6 展示数据
       this.pieChart.setOption(option)
     },
+    drawPie2 (data) {
+      // 5 配置项
+      const option = {
+        title: {
+          text: '南丁格尔玫瑰图',
+          subtext: '纯属虚构',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          left: 'center',
+          top: 'bottom',
+          data: ['rose1', 'rose2', 'rose3', 'rose4', 'rose5', 'rose6', 'rose7', 'rose8']
+        },
+        toolbox: {
+          show: false,
+          feature: {
+            mark: { show: true },
+            dataView: { show: true, readOnly: false },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
+        series: [
+          {
+            name: '半径模式',
+            type: 'pie',
+            radius: [35, 140],
+            center: ['25%', '50%'],
+            roseType: 'radius',
+            itemStyle: {
+              borderRadius: 5
+            },
+            label: {
+              show: false
+            },
+            emphasis: {
+              label: {
+                show: true
+              }
+            },
+            data: [
+              { value: 40, name: 'rose 1' },
+              { value: 33, name: 'rose 2' },
+              { value: 28, name: 'rose 3' },
+              { value: 22, name: 'rose 4' },
+              { value: 20, name: 'rose 5' },
+              { value: 15, name: 'rose 6' },
+              { value: 12, name: 'rose 7' },
+              { value: 10, name: 'rose 8' }
+            ]
+          },
+          {
+            name: '面积模式',
+            type: 'pie',
+            radius: [20, 140],
+            center: ['75%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+              borderRadius: 5
+            },
+            data: [
+              { value: 30, name: 'rose 1' },
+              { value: 28, name: 'rose 2' },
+              { value: 26, name: 'rose 3' },
+              { value: 24, name: 'rose 4' },
+              { value: 22, name: 'rose 5' },
+              { value: 20, name: 'rose 6' },
+              { value: 18, name: 'rose 7' },
+              { value: 16, name: 'rose 8' }
+            ]
+          }
+        ]
+      }
+      // 6 展示数据
+      this.pieChart2.setOption(option)
+    },
     drawBar2 () {
       const option = {
         tooltip: {
@@ -208,11 +284,67 @@ export default {
       this.barChart2.setOption(option)
     },
     drawBar (data) {
+      data = [18203, 23489, 29034, 104970, 131744, 630230]
       const option = {
         title: {
           text: '世界人口总量',
-          subtext: '数据来自网络'
+          subtext: '数据来自网络',
+          textStyle: {
+            fontSize: 14,
+            align: 'left',
+            color: 'rgba(255, 255, 255, 0.85)',
+            fontWeight: 400
+          },
+          left: 133,
+          top: 18
         },
+        // 左右上下间距
+        grid: {
+          left: '3%',
+          right: '8%',
+          bottom: '1%',
+          containLabel: true
+        },
+        yAxis: {
+          type: 'category',
+          inverse: true.valueOf,
+          // 坐标数据
+          data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
+          axisLabel: {
+            interval: 0,
+            rotate: 0,
+            margin: 110,
+            formatter: (value) => {
+              if (value.length > 6) {
+                return value.substr(0, 6) + '...'
+              }
+              return value
+            },
+            fontSize: 14,
+            align: 'left',
+            color: 'rgba(255, 255, 255, 0.85)'
+          },
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          }
+        },
+        xAxis: {
+          type: 'value',
+          position: 'top',
+          boundaryGap: [0, 0.01],
+          max: 'dataMax',
+          show: false,
+          axisLine: {
+            show: true
+          },
+          axisTick: {
+            show: false
+          }
+        },
+
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -222,31 +354,85 @@ export default {
         legend: {
           data: ['2011年', '2012年']
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '1%',
-          containLabel: true
-        },
-        xAxis: {
-          type: 'value',
-          boundaryGap: [0, 0.01]
-        },
-        yAxis: {
-          type: 'category',
-          data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)']
-        },
         series: [
           {
             name: '2011年',
             type: 'bar',
-            data: [18203, 23489, 29034, 104970, 131744, 630230]
+            // data: [18203, 23489, 29034, 104970, 131744, 630230]
+            data: data.map((item) => {
+              const port = (630230 * 100 / item).toFixed(5) + '%'
+              // console.log(port)
+              const tempObj = {
+                value: item,
+                label: {
+                  show: true,
+                  position: [port, '50%']
+                }
+              }
+              return tempObj
+            }),
+            // 默认的数据条颜色
+            itemStyle: {
+            // color: "#2BFBAC",
+              color: new echarts.graphic.LinearGradient(
+                0, 1, 1, 1,
+                [
+                  { offset: 0, color: '#13E3F5' },
+                  { offset: 1, color: '#2BFBAC' }
+                ]
+              )
+            },
+            barWidth: 12,
+            barCategoryGap: 20,
+            // barMinWidth: 12,
+            // barMaxWidth: 14,
+            label: {
+              show: true,
+              color: 'rgba(0, 0, 0, 0.85)',
+              fontSize: 14,
+              // position: 'right',
+              // position: [10, 10],
+              position: ['100%', '50%'],
+              align: 'left',
+              verticalAlign: 'middle',
+              offset: [ 20, 2 ],
+              valueAnimation: true,
+              formatter: (p) => {
+                // console.log(p)
+                let value = '' + p.value
+                value = value.padStart(6, ' ')
+                return value
+              }
+            },
+            silent: true,
+            showBackground: true,
+            backgroundStyle: {
+              color: 'rgba(0, 0, 0, 0.2)'
+            }
           },
           {
             name: '2012年',
             type: 'bar',
-            data: [19325, 23438, 31000, 121594, 134141, 681807]
+            data: [19325, 23438, 31000, 121594, 134141, 681807],
+            barWidth: 12,
+            barCategoryGap: 20,
+            label: {
+              show: true,
+              fontSize: 14,
+              position: ['100%', '50%'],
+              align: 'left',
+              verticalAlign: 'middle',
+              offset: [ 20, 2 ],
+              valueAnimation: true,
+              formatter: (p) => {
+                // console.log(p)
+                let value = '' + p.value
+                value = value.padStart(6, ' ')
+                return value
+              }
+            }
           }
+
         ]
 
       }

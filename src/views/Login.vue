@@ -2,10 +2,10 @@
   <div class="login_container">
     <div class="login_box">
       <!-- 头像区 -->
-      <!-- <div class="avatar_box">
-                <img src="../assets/logo.png" alt="" />
-            </div> -->
-      <div class="topTitle">电商管理系统</div>
+      <div class="avatar_box">
+          <img src="../assets/imgs/logo.png" alt="" />
+      </div>
+      <div class="topTitle">管理系统</div>
       <!-- 登录表单区 -->
       <el-form
         ref="loginFormRef"
@@ -15,9 +15,12 @@
         :rules="loginFormRules"
       >
         <!-- 用户名 -->
-        <el-form-item prop="username">
+        <el-form-item prop="username" >
           <el-input
             v-model="loginForm.username"
+            placeholder="请输入登录名"
+            maxlength="15"
+            clearable
             prefix-icon="iconfont icon-user"
           ></el-input>
         </el-form-item>
@@ -25,7 +28,10 @@
         <el-form-item prop="password">
           <el-input
             v-model="loginForm.password"
+            placeholder="请输入密码"
+            maxlength="18"
             type="password"
+            show-password
             prefix-icon="iconfont icon-3702mima"
           ></el-input>
         </el-form-item>
@@ -42,7 +48,7 @@
 export default {
   data () {
     return {
-      // 登录表单的数据绑定对象
+      // 默认登录表单的数据绑定对象
       loginForm: {
         username: 'admin',
         password: '123456'
@@ -51,7 +57,10 @@ export default {
       loginFormRules: {
         // 验证用户名是否合法
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur' },
           {
             min: 3,
             max: 10,
@@ -61,7 +70,10 @@ export default {
         ],
         // 验证密码是否合法
         password: [
-          { required: true, message: '请输入登录密码', trigger: 'blur' },
+          {
+            required: true,
+            message: '请输入登录密码',
+            trigger: 'blur' },
           {
             min: 6,
             max: 15,
@@ -107,7 +119,7 @@ export default {
           })
           .catch((e) => {
             console.log(e)
-            window.sessionStorage.setItem('token', 'adsfasdfasdfasd')
+            window.sessionStorage.setItem('token', 'selfdefinetoken')
             this.$message({
               message: '本地登录',
               type: 'success',
@@ -134,16 +146,6 @@ export default {
   // position: fixed;
   height: 100%;
 }
-.topTitle {
-  width: 100%;
-  height: 140px;
-  // background: red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 25px;
-  font-weight: 700;
-}
 .login_box {
   width: 500px;
   height: 350px;
@@ -151,7 +153,7 @@ export default {
   border-radius: 3px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 50%; // 万能居中
   transform: translate(-50%, -50%);
 
   .avatar_box {
@@ -163,6 +165,7 @@ export default {
     box-shadow: 0 0 10px #ddd;
     position: absolute;
     left: 50%;
+    top: -30px;
     transform: translate(-50%, -50%);
     background-color: #fff;
     img {
@@ -172,16 +175,27 @@ export default {
       background-color: #eee;
     }
   }
+  .topTitle {
+    width: 100%;
+    height: 140px;
+    // background: red;
+    display: flex;
+    align-items: center; // flex居中
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 700;
+  }
+  .login_form {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .btns {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
-.login_form {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-.btns {
-  display: flex;
-  justify-content: flex-end;
-}
+
 </style>

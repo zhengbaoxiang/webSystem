@@ -26,49 +26,49 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    redirect: '/reports',
+    redirect: '/home/reports',
     meta: { ishome: true, keepAlive: true },
     component: () => import('../views/Home.vue'),
     children: [
       {
-        path: '/welcome',
+        path: '/home/welcome',
         name: 'welcome',
         component: () => import('../views/Welcome.vue')
       },
       {
-        path: '/users',
+        path: '/home/users',
         component: Users
       },
       {
-        path: '/rights',
+        path: '/home/rights',
         component: Rights
       },
       {
-        path: '/roles',
+        path: '/home/roles',
         component: Roles
       },
       {
-        path: '/categories',
+        path: '/home/categories',
         component: Cate
       },
       {
-        path: '/params',
+        path: '/home/params',
         component: Params
       },
       {
-        path: '/goods',
+        path: '/home/goods',
         component: List
       },
       {
-        path: '/goods/add',
+        path: '/home/goods/add',
         component: Add
       },
       {
-        path: '/orders',
+        path: '/home/orders',
         component: Order
       },
       {
-        path: '/reports',
+        path: '/home/reports',
         component: Report
       }
     ]

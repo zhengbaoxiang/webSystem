@@ -23,10 +23,26 @@
                     :collapse="isCollapse"
                     :collapse-transition="false"
                     :router="true"
-                    :default-active="activePath"
+                    :default-active="currentPath"
                 >
-                    <!-- 一级菜单 -->
-                    <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
+                  <li v-for="item in menuList" :key="item.id" >
+                     <!-- 一级菜单 无子菜单，直接选项 el-menu-item,无需模板-->
+                    <el-menu-item
+                      :index="'/home/' + item.path"
+                      v-if="!item.children||item.children.length===0"
+                      class="borderRed"
+                    >
+                        <!-- 图标 -->
+                        <i class="iconfont icon-baobiao"></i>
+                        <!-- 文本 -->
+                        <span>{{ item.authName }}</span>
+                    </el-menu-item>
+                     <!-- 一级菜单 有子菜单-el-submenu   -->
+                    <el-submenu
+                      :index="item.id + ''"
+                      v-else
+                      class="borderGreen"
+                      >
                         <!-- 一级菜单的模板区 -->
                         <template slot="title">
                             <!-- 图标 -->
@@ -35,12 +51,12 @@
                             <span>{{ item.authName }}</span>
                         </template>
 
-                        <!-- 二级菜单 -->
+                        <!-- 菜单项 -->
                         <el-menu-item
-                            :index="'/' + subItem.path"
+                            :index="'/home/' + subItem.path"
                             v-for="subItem in item.children"
                             :key="subItem.id"
-                            @click="saveNavState('/' + subItem.path)"
+                            @click.stop.native="subMenuClick(subItem)"
                         >
                             <template slot="title">
                                 <!-- 图标 -->
@@ -50,12 +66,21 @@
                             </template>
                         </el-menu-item>
                     </el-submenu>
+
+                  </li>
                 </el-menu>
             </el-aside>
             <!-- 显示内容 -->
             <el-main>
-                <!-- 路由占位符 -->
-                <router-view></router-view>
+              <!-- 面包屑导航区域 -->
+              <el-breadcrumb separator-class="el-icon-arrow-right">
+                  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+                  <el-breadcrumb-item>{{menuTitle}}</el-breadcrumb-item>
+                  <el-breadcrumb-item v-if="subTitle">{{subTitle}}</el-breadcrumb-item>
+              </el-breadcrumb>
+
+              <!-- 路由占位符 -->
+              <router-view></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -65,6 +90,8 @@ export default {
   data () {
     return {
       menuList: [], // 左侧菜单数据
+      menuTitle: '', // 一级菜单
+      subTitle: '', // 二级菜单
       iconsObj: {
         125: 'iconfont icon-user',
         103: 'iconfont icon-tijikongjian',
@@ -72,15 +99,33 @@ export default {
         102: 'iconfont icon-danju',
         145: 'iconfont icon-baobiao'
       },
-      isCollapse: false,
-      activePath: '' // 被激活的链接地址
+      isCollapse: false
     }
   },
   created () {
+    console.log('created')
     this.getMenuList()
-    this.activePath = window.sessionStorage.getItem('activePath')
+    // this.currentPath = this.$route.path
   },
-  mounted () {},
+  mounted () {
+    console.log('mounted')
+  },
+  activated () {
+    console.log('activated')
+  },
+  watch: {
+    currentPath (newVal, oldVal) {
+      console.log('watch=>>>>', newVal, oldVal)
+    }
+  },
+  computed: {
+    currentPath () {
+      const path = this.$route.path
+      console.log('computed=>>>>', path)
+      this.getBreadcrumb(path)
+      return path
+    }
+  },
   methods: {
     logout () {
       window.sessionStorage.clear()
@@ -101,54 +146,83 @@ export default {
     //     })
       const res = {
         'data': [
-          { 'id': 145,
-            'order': 0,
-            'authName': '首页',
-            'path': 'reports'
-            // 'children': [{ 'id': 146, 'authName': '数据报表', 'path': 'reports', 'children': [], 'order': null }]
+          { 'id': 100,
+            'authName': '数据总览',
+            'path': 'reports',
+            'children': []
           },
-          { 'id': 125,
-            'order': 1,
+          { 'id': 101,
             'authName': '用户管理',
             'path': 'users',
-            'children': [{ 'id': 110, 'authName': '用户列表', 'path': 'users', 'children': [], 'order': null }]
+            'children': [{ 'id': 1, 'authName': '用户列表', 'path': 'users', 'children': [] }]
           },
-          { 'id': 103,
-            'order': 2,
+
+          { 'id': 102,
             'authName': '权限管理',
             'path': 'rights',
             'children': [
-              { 'id': 111, 'authName': '角色列表', 'path': 'roles', 'children': [], 'order': null },
-              { 'id': 112, 'authName': '权限列表', 'path': 'rights', 'children': [], 'order': null }]
+              { 'id': 111, 'authName': '角色列表', 'path': 'roles', 'children': [] },
+              { 'id': 112, 'authName': '权限列表', 'path': 'rights', 'children': [] }]
           },
-          { 'id': 101,
-            'order': 3,
+          { 'id': 103,
             'authName': '商品管理',
             'path': 'goods',
             'children': [
-              { 'id': 104, 'authName': '商品列表', 'path': 'goods', 'children': [], 'order': 1 },
-              { 'id': 115, 'authName': '分类参数', 'path': 'params', 'children': [], 'order': 2 },
-              { 'id': 121, 'authName': '商品分类', 'path': 'categories', 'children': [], 'order': 3 }]
+              { 'id': 104, 'authName': '商品列表', 'path': 'goods', 'children': [] },
+              { 'id': 115, 'authName': '分类参数', 'path': 'params', 'children': [] },
+              { 'id': 121, 'authName': '商品分类', 'path': 'categories', 'children': [] }
+            ]
           },
-          { 'id': 102,
-            'order': 4,
+          { 'id': 104,
             'authName': '订单管理',
             'path': 'orders',
-            'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [], 'order': null }]
+            'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [] }]
+          },
+          { 'id': 10086,
+            'authName': '关于我们',
+            'path': 'welcome'
           }
 
         ],
         'meta': { 'msg': '获取菜单列表成功', 'status': 200 } }
       this.menuList = res.data
     },
+
     // 点击按钮切换菜单的折叠展开事件
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
     },
-    // 保存链接的激活状态
-    saveNavState (activePath) {
-      window.sessionStorage.setItem('activePath', activePath)
-      this.activePath = activePath
+    // 手动跳转
+    subMenuClick (item) {
+      console.log(item)
+      // this.$router.push({
+      //   path: '/home/' + item.path,
+      //   query: {
+      //     Id: item.id
+      //   }
+      // })
+    },
+    getBreadcrumb (path) {
+      this.menuList.forEach((item) => {
+        const children = item.children || []
+        if (children.length > 0) {
+          children.forEach((subItem) => {
+            if (path.includes(subItem.path)) {
+              console.log('获取菜单标题', subItem)
+              // 获取菜单标题
+              this.menuTitle = item.authName
+              this.subTitle = subItem.authName
+            }
+          })
+        } else {
+          if (path.includes(item.path)) {
+            console.log('获取菜单标题', item)
+            // 获取菜单标题
+            this.menuTitle = item.authName
+            this.subTitle = ''
+          }
+        }
+      })
     }
   }
 }

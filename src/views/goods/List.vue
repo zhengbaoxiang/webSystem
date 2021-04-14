@@ -1,12 +1,5 @@
 <template>
     <div>
-        <!-- 面包屑导航区域 -->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-            <el-breadcrumb-item>商品列表</el-breadcrumb-item>
-        </el-breadcrumb>
-
         <el-card>
             <el-row :gutter="20">
                 <el-col :span="8">
@@ -151,7 +144,7 @@ export default {
     editClick (row) {},
     // 添加商品按钮
     goAddPage () {
-      this.$router.push('/goods/add')
+      this.$router.push('/home/goods/add')
     }
   }
 }
