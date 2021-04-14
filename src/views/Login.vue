@@ -65,7 +65,7 @@ export default {
             min: 3,
             max: 10,
             message: '长度在3 到 10个字符之间',
-            trigger: 'blur'
+            trigger: 'change'
           }
         ],
         // 验证密码是否合法
@@ -78,7 +78,7 @@ export default {
             min: 6,
             max: 15,
             message: '长度在 6 到 15 个字符之间',
-            trigger: 'blur'
+            trigger: 'change'
           }
         ]
       }
@@ -134,6 +134,10 @@ export default {
     // 点击重置按钮，重置登录表单
     resetLoginForm () {
       this.$refs.loginFormRef.resetFields()
+      this.loginForm = {
+        username: '',
+        password: ''
+      }
     }
   }
 }

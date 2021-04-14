@@ -33,7 +33,7 @@
                       class="borderRed"
                     >
                         <!-- 图标 -->
-                        <i class="iconfont icon-baobiao"></i>
+                        <i :class="iconsObj[item.id]"></i>
                         <!-- 文本 -->
                         <span>{{ item.authName }}</span>
                     </el-menu-item>
@@ -93,11 +93,12 @@ export default {
       menuTitle: '', // 一级菜单
       subTitle: '', // 二级菜单
       iconsObj: {
-        125: 'iconfont icon-user',
-        103: 'iconfont icon-tijikongjian',
-        101: 'iconfont icon-shangpin',
+        100: 'iconfont icon-baobiao',
+        101: 'iconfont icon-user',
         102: 'iconfont icon-danju',
-        145: 'iconfont icon-baobiao'
+        103: 'iconfont icon-shangpin',
+        104: 'iconfont icon-tijikongjian',
+        10086: 'iconfont icon-tijikongjian'
       },
       isCollapse: false
     }
