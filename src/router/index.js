@@ -9,7 +9,6 @@ import Params from '../views/goods/Params.vue'
 import List from '../views/goods/List.vue'
 import Add from '../views/goods/add.vue'
 import Order from '../views/order/order.vue'
-import Report from '../views/report/Report.vue'
 
 Vue.use(VueRouter)
 
@@ -30,11 +29,12 @@ const routes = [
     meta: { ishome: true, keepAlive: true },
     component: () => import('../views/Home.vue'),
     children: [
+
       {
-        path: '/home/welcome',
-        name: 'welcome',
-        component: () => import('../views/Welcome.vue')
+        path: '/home/reports',
+        component: () => import('../views/report/Report.vue')
       },
+
       {
         path: '/home/users',
         component: Users
@@ -68,8 +68,9 @@ const routes = [
         component: Order
       },
       {
-        path: '/home/reports',
-        component: Report
+        path: '/home/welcome',
+        name: 'welcome',
+        component: () => import('../views/Welcome.vue')
       }
     ]
   }
