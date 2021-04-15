@@ -98,7 +98,7 @@ export default {
         102: 'iconfont icon-danju',
         103: 'iconfont icon-shangpin',
         104: 'iconfont icon-tijikongjian',
-        10086: 'iconfont icon-tijikongjian'
+        10086: 'el-icon-question'
       },
       isCollapse: false
     }

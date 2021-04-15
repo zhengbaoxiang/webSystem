@@ -234,7 +234,7 @@ export default {
     height: 100%;
     color: red;
     div.chartCon{
-      height: 400px;
+      height: 300px;
     }
   }
 }
