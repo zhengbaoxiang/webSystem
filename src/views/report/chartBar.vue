@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <el-col :span="8">
-        <div id="barId2" style="height: 300px"></div>
-      </el-col>
-      <el-col :span="12">
-        <div id="barId" style="width: 750px; height: 400px"></div>
-      </el-col>
+  <div class="tempLateContainer clearfix">
+    <el-col :span="12">
+        <div id="barId2" class="chartCon"></div>
+    </el-col>
+    <el-col :span="12">
+      <div id="barId" class="chartCon"></div>
+    </el-col>
   </div>
 </template>
 <script>
@@ -35,43 +35,93 @@ export default {
     },
     getData () {
       console.log('获取图表数据')
-      this.drawBar()
-      this.drawBar2()
+      const data = [
+        { name: '中国', value: 7999, value2: 1.5 },
+        { name: '美国', value: 5512, value2: 0.8 },
+        { name: '韩国', value: 2512, value2: 0.7 },
+        { name: '意大利', value: 577, value2: 0.6 },
+        { name: '法国', value: 298, value2: 0.5 }
+      ]
+      this.drawBar(data)
+      this.drawBar2(data)
     },
     drawBar2 () {
       const option = {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
+        // 左右上下间距
         grid: {
+          top: '15%',
           left: '3%',
-          right: '4%',
+          right: '8%',
           bottom: '3%',
           containLabel: true
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        toolbox: {
+          feature: {
+            dataView: { show: true, readOnly: false },
+            magicType: { show: true, type: ['line', 'bar'] },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
+        legend: {
+          data: ['蒸发量', '降水量', '平均温度']
         },
         xAxis: [
           {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            axisTick: {
-              alignWithLabel: true
+            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+            axisPointer: {
+              type: 'shadow'
             }
           }
         ],
         yAxis: [
           {
-            type: 'value'
+            type: 'value',
+            name: '水量',
+            min: 0,
+            max: 250,
+            interval: 50,
+            axisLabel: {
+              formatter: '{value} ml'
+            }
+          },
+          {
+            type: 'value',
+            name: '温度',
+            min: 0,
+            max: 25,
+            interval: 5,
+            axisLabel: {
+              formatter: '{value} °C'
+            }
           }
         ],
         series: [
           {
-            name: '直接访问',
+            name: '蒸发量',
             type: 'bar',
-            barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+          },
+          {
+            name: '降水量',
+            type: 'bar',
+            data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+          },
+          {
+            name: '平均温度',
+            type: 'line',
+            yAxisIndex: 1,
+            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
           }
         ]
       }
@@ -79,32 +129,32 @@ export default {
       this.barChart2.setOption(option)
     },
     drawBar (data) {
-      data = [18203, 23489, 29034, 104970, 131744, 630230]
+      const maxData = data[0].value
       const option = {
         title: {
-          text: '世界人口总量',
+          text: '表的title',
           subtext: '数据来自网络',
           textStyle: {
             fontSize: 14,
             align: 'left',
-            color: 'rgba(255, 255, 255, 0.85)',
+            color: 'rgba(0, 0, 0, 0.85)',
             fontWeight: 400
           },
-          left: 133,
-          top: 18
+          left: '50%',
+          top: 5
         },
         // 左右上下间距
         grid: {
           left: '3%',
-          right: '8%',
-          bottom: '1%',
+          right: '15%',
+          bottom: '5%',
           containLabel: true
         },
         yAxis: {
           type: 'category',
           inverse: true.valueOf,
           // 坐标数据
-          data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)'],
+          data: data.map((item) => item.name),
           axisLabel: {
             interval: 0,
             rotate: 0,
@@ -117,13 +167,13 @@ export default {
             },
             fontSize: 14,
             align: 'left',
-            color: 'rgba(255, 255, 255, 0.85)'
+            color: 'rgba(0, 0, 0, 0.85)'
           },
           axisLine: {
-            show: false
+            show: true
           },
           axisTick: {
-            show: false
+            show: true
           }
         },
         xAxis: {
@@ -131,34 +181,36 @@ export default {
           position: 'top',
           boundaryGap: [0, 0.01],
           max: 'dataMax',
-          show: false,
+          show: true,
           axisLine: {
             show: true
           },
           axisTick: {
+            show: true
+          },
+          splitLine: {
             show: false
           }
         },
 
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          }
-        },
+        // tooltip: {
+        //   trigger: 'axis',
+        //   axisPointer: {
+        //     type: 'shadow'
+        //   }
+        // },
         legend: {
-          data: ['2011年', '2012年']
+          data: ['图例标题']
         },
         series: [
           {
-            name: '2011年',
+            name: '系列名',
             type: 'bar',
-            // data: [18203, 23489, 29034, 104970, 131744, 630230]
             data: data.map((item) => {
-              const port = (630230 * 100 / item).toFixed(5) + '%'
+              const port = (maxData * 100 / item.value).toFixed(5) + '%'
               // console.log(port)
               const tempObj = {
-                value: item,
+                value: item.value,
                 label: {
                   show: true,
                   position: [port, '50%']
@@ -206,37 +258,42 @@ export default {
             }
           },
           {
-            name: '2012年',
-            type: 'bar',
-            data: [19325, 23438, 31000, 121594, 134141, 681807],
-            barWidth: 12,
-            barCategoryGap: 20,
-            label: {
-              show: true,
-              fontSize: 14,
-              position: ['100%', '50%'],
-              align: 'left',
-              verticalAlign: 'middle',
-              offset: [ 20, 2 ],
-              valueAnimation: true,
-              formatter: (p) => {
-                // console.log(p)
-                let value = '' + p.value
-                value = value.padStart(6, ' ')
-                return value
-              }
-            }
+            type: 'scatter', //
+            data: data.map((item) => item.value), // 坐标的数据
+            // 默认的数据颜色
+            itemStyle: {
+              color: 'rgba(251, 199, 32, 1)',
+              borderColor: '#fff',
+              borderWidth: 2
+            },
+            symbolSize: 18,
+            cursor: 'auto',
+            animation: false,
+            silent: true
           }
 
         ]
 
       }
+
       this.barChart.setOption(option)
     }
+
   }
 }
 </script>
 
 <style lang="less" scoped>
+.tempLateContainer{
+  width: 100%;
+  height: 100%;
+  .el-col{
+    height: 100%;
+    color: red;
+    div.chartCon{
+      height: 400px;
+    }
+  }
+}
 
 </style>
