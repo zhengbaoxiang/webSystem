@@ -4,7 +4,7 @@
         <el-header>
             <div>
                 <!-- <img style="margin-left: 15px" src="@/assets/logo.png" alt="" /> -->
-                <span style="margin-left: 20px">电商后台管理系统欢迎您</span>
+                <span style="margin-left: 20px">后台管理系统欢迎您</span>
             </div>
             <div></div>
             <el-button type="info" @click="logout">退出</el-button>
@@ -29,13 +29,14 @@
                      <!-- 一级菜单 无子菜单，直接选项 el-menu-item,无需模板-->
                     <el-menu-item
                       :index="'/home/' + item.path"
+                      @click.native="menuClick(item)"
                       v-if="!item.children||item.children.length===0"
                       class="borderRed"
                     >
                         <!-- 图标 -->
                         <i :class="iconsObj[item.id]"></i>
                         <!-- 文本 -->
-                        <span>{{ item.authName }}</span>
+                        <span v-show="!isCollapse">{{ item.authName }}</span>
                     </el-menu-item>
                      <!-- 一级菜单 有子菜单-el-submenu   -->
                     <el-submenu
@@ -48,7 +49,7 @@
                             <!-- 图标 -->
                             <i :class="iconsObj[item.id]"></i>
                             <!-- 文本 -->
-                            <span>{{ item.authName }}</span>
+                            <span v-show="!isCollapse">{{ item.authName }}</span>
                         </template>
 
                         <!-- 菜单项 -->
@@ -56,7 +57,7 @@
                             :index="'/home/' + subItem.path"
                             v-for="subItem in item.children"
                             :key="subItem.id"
-                            @click.stop.native="subMenuClick(subItem)"
+                            @click.stop.native="menuClick(subItem)"
                         >
                             <template slot="title">
                                 <!-- 图标 -->
@@ -78,7 +79,6 @@
                   <el-breadcrumb-item>{{menuTitle}}</el-breadcrumb-item>
                   <el-breadcrumb-item v-if="subTitle">{{subTitle}}</el-breadcrumb-item>
               </el-breadcrumb>
-
               <!-- 路由占位符 -->
               <router-view></router-view>
             </el-main>
@@ -94,10 +94,10 @@ export default {
       subTitle: '', // 二级菜单
       iconsObj: {
         100: 'iconfont icon-baobiao',
-        101: 'iconfont icon-user',
+        101: 'iconfont icon-tijikongjian',
         102: 'iconfont icon-danju',
         103: 'iconfont icon-shangpin',
-        104: 'iconfont icon-tijikongjian',
+        104: 'iconfont icon-user',
         10086: 'el-icon-question'
       },
       isCollapse: false
@@ -153,11 +153,10 @@ export default {
             'children': []
           },
           { 'id': 101,
-            'authName': '用户管理',
-            'path': 'users',
-            'children': [{ 'id': 1, 'authName': '用户列表', 'path': 'users', 'children': [] }]
+            'authName': '订单管理',
+            'path': 'orders',
+            'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [] }]
           },
-
           { 'id': 102,
             'authName': '权限管理',
             'path': 'rights',
@@ -175,9 +174,9 @@ export default {
             ]
           },
           { 'id': 104,
-            'authName': '订单管理',
-            'path': 'orders',
-            'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [] }]
+            'authName': '用户管理',
+            'path': 'users',
+            'children': [{ 'id': 1, 'authName': '用户列表', 'path': 'users', 'children': [] }]
           },
           { 'id': 10086,
             'authName': '关于我们',
@@ -193,9 +192,11 @@ export default {
     toggleCollapse () {
       this.isCollapse = !this.isCollapse
     },
-    // 手动跳转
-    subMenuClick (item) {
-      console.log(item)
+    // 可以手动跳转，加传参
+    menuClick (item) {
+      // console.log(item)
+      this.isCollapse = false // 只要点击了跳转菜单，就展开
+      console.log('isCollapse', this.isCollapse)
       // this.$router.push({
       //   path: '/home/' + item.path,
       //   query: {
@@ -203,6 +204,7 @@ export default {
       //   }
       // })
     },
+    // 自动获取导航面包屑，无需单独在页面内写死
     getBreadcrumb (path) {
       this.menuList.forEach((item) => {
         const children = item.children || []
