@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="tempLateContainer clearfix">
     <el-col :span="8">
       <!-- 2 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-      <div id="pieId1" style="height: 300px"></div>
+        <div id="pieId1" class="chartCon"></div>
     </el-col>
     <el-col :span="16">
-      <div id="pieId2" style="height: 300px"></div>
+      <div id="pieId2" class="chartCon"></div>
     </el-col>
   </div>
 </template>
@@ -227,5 +227,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.tempLateContainer{
+  width: 100%;
+  height: 100%;
+  .el-col{
+    height: 100%;
+    color: red;
+    div.chartCon{
+      height: 400px;
+    }
+  }
+}
 </style>
