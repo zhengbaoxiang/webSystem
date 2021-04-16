@@ -3,20 +3,52 @@
   <!-- 卡片视图 -->
   <el-card>
     <el-row>
-        <el-col :span="8">
+        <el-col :span="6">
             <el-input  v-model="keyWord"
-            @input="inputChange(keyWord)"
-            @change="onChange(keyWord)"
-            placeholder="请输入内容"
-            maxlength="15"
-            clearable
+              @input="keyWord = inputChange(keyWord)"
+              @change="inputFished"
+              placeholder="请输入内容"
+              maxlength="15"
+              clearable
+
             >
-                <el-button slot="append" icon="el-icon-search"  @click="searchData(keyWord)"></el-button>
+              <el-button slot="append" icon="el-icon-search"  @click="searchData(keyWord)"></el-button>
             </el-input>
         </el-col>
+        <el-button  @click="reset" class="ml20">重置</el-button>
+
+        <el-select v-model="status" class="ml20" placeholder="请选择是否付款" clearable @change="optionChange" >
+          <el-option
+            v-for="item in statusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            >
+          </el-option>
+        </el-select>
+
+        <el-date-picker
+          class="ml20"
+          v-model="dateSelected"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+          @change="dateChange"
+          value-format="yyyy-MM-dd"
+          >
+          <!--选中值返回的格式 value-format="yyyy-MM-dd" 或  value-format="timestamp" -->
+          <!--选中值显示的格式 format="yyyy-MM-dd" 或  format="timestamp" -->
+        </el-date-picker>
+
+        <el-button  @click="createItem" class="fr mr20">新增</el-button>
+
     </el-row>
     <!-- 订单列表数据 , 边框 ，斑马纹 -->
-    <el-table :data="dataList" border stripe  @selection-change="handleSelectionChange" empty-text="暂时没有数据。">
+    <el-table :data="filterList" border stripe  @selection-change="handleSelectionChange" empty-text="暂时没有数据。">
       <!-- selection 添加勾选框，fixed固定在左侧 -->
         <el-table-column type="selection" label="#" align="center" fixed="left"></el-table-column>
         <el-table-column type="index" label="#" align="center" fixed="left"></el-table-column>
@@ -126,9 +158,47 @@ export default {
         pagesize: 10 // 每页显示条数
 
       },
-      total: 0,
+      statusOptions: [
+        {
+          value: '0',
+          label: '未付款'
+        }, {
+          value: '1',
+          label: '已付款'
+        }
+      ],
+      dateSelected: '',
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick (picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
 
       dataList: [],
+      filterList: [],
+      total: 0,
 
       addressVisible: false,
       addressForm: {
@@ -152,6 +222,41 @@ export default {
 
   },
   methods: {
+    inputChange (value = '') {
+      let newValue = value.trim() // 去两端空格
+      var pattern = /[^A-Za-z0-9\u4e00-\u9fa5]/g // 只允许输入中英文数字
+      newValue = value.replace(pattern, '')
+      // console.log('持续正则校验，过滤前', '|' + value + '|')
+      // console.log('过滤后', '|' + newValue + '|')
+      // 实时搜索可以在这里调用getData
+      return newValue
+    },
+    inputFished (value) {
+      // console.log('失去焦点触发：', value)
+      // 此时可以调用search,或getData
+      this.searchData(value)
+    },
+    searchData (keyWord) {
+      console.log('keyword：', '|' + keyWord + '|')
+      // 有接口就用getData()
+      this.getdataList()
+      // 没有接口，可以本地进行筛选,
+      const filterData = this.dataList.filter(item => {
+        if (item.reciptNo.includes(keyWord)) {
+          return true
+        } else if (item.userName.includes(keyWord)) {
+          return true
+        } else if (item.phone.includes(keyWord)) {
+          return true
+        } else {
+          return false
+        }
+      })
+      // console.log('过滤后的列表', filterData)
+      // 过滤完统一赋值
+      this.filterList = filterData
+    },
+
     getdataList () {
       const params = {
         keyWord: this.keyWord,
@@ -163,30 +268,46 @@ export default {
       }
       console.log(params)
       // 调接口 todo
-      this.dataList = [
-        { id: 1, reciptNo: '20212301212312123123', userName: '棉宝宝', phone: '13532392392', status: 0, createTime: '2020-10-14' },
-        { id: 2, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-13' },
+      const respData = [
+        { id: 1, reciptNo: '20212301212312123123', userName: '棉宝宝', phone: '18222331000', status: 0, createTime: '2020-10-14' },
+        { id: 2, reciptNo: '20212301212312123123', userName: '222', phone: '18222331281', status: 1, createTime: '2020-10-13' },
         { id: 3, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-14' },
-        { id: 4, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-15' },
+        { id: 4, reciptNo: '20000000000000000000', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-15' },
         { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-16' },
         { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-17' },
-        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-18' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '刘亦菲', phone: '13532392392', status: 1, createTime: '2020-10-18' },
         { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-19' },
         { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-20' },
         { id: 6, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-22' }
       ]
+      // 模拟后台数据，用前台实现过滤
+      this.dataList = respData
+      this.filterList = respData
       this.total = 28
     },
-    inputChange (value) {
-      console.log('持续inputChange,需要正则校验，过滤', value)
+    // 筛选事件
+    optionChange (value) {
+      console.log(value)
+      // 过滤todo
     },
-    onChange (value) {
-      console.log('失去焦点触发Change：', value)
+    dateChange (value) {
+      console.log(value)
+      this.startTime = value[0]
+      this.endTime = value[1]
+      // 过滤todo
     },
-    searchData (keyWord) {
-      console.log('keyword：', keyWord)
+    // 重置选中条件，重新调取数据
+    reset () {
+      this.keyWord = ''
+      this.status = null
+      this.startTime = ''
+      this.endTime = ''
+      this.queryInfo = {
+        pagenum: 1,
+        pagesize: 10
+      }
+      this.getdataList()
     },
-
     // 选中事件
     handleSelectionChange (sel) {
       console.log('selec', sel)
@@ -210,6 +331,10 @@ export default {
       this.getdataList()
     },
     // 增删改查
+    createItem () {
+      // 弹出form表单窗口，新增一个，新增确认后，追加到列表
+      console.log('create')
+    },
     view () {
       this.addressVisible = true
     },
