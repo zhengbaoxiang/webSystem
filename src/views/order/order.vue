@@ -9,41 +9,42 @@
                 </el-input>
             </el-col>
         </el-row>
-        <!-- 订单列表数据 -->
-        <el-table :data="dataList" border stripe>
-            <el-table-column type="index" label="#" align="center"></el-table-column>
-            <el-table-column
-                label="订单标号" prop="reciptNo"     align="center"
-            ></el-table-column>
-            <el-table-column
-                label="联系方式"  prop="phone"  align="center" >
+        <!-- 订单列表数据 , 边框 ，斑马纹 -->
+        <el-table :data="dataList" border stripe >
+            <el-table-column type="index" label="#" align="center" fixed="left"></el-table-column>
+            <el-table-column   label="订单标号" prop="reciptNo" width="200"  align="center" ></el-table-column>
+
+            <el-table-column   label="联系方式"  prop="phone" width="100"  align="center" >
             </el-table-column>
-            <el-table-column   label="下单人"  prop="userName"  align="center" >
+            <el-table-column   label="下单人"  prop="userName" width="100" align="center" >
             </el-table-column>
-            <el-table-column label="是否付钱" prop="status" align="center">
+            <el-table-column label="是否付钱" prop="status" width="100" align="center">
                 <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.status === 1">已付款</el-tag>
                     <el-tag type="danger" v-if="scope.row.status === 0">未付款</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="下单时间" prop="createTime" align="center">
+            <el-table-column label="下单时间" prop="createTime" width="200" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.createTime }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center">
+            <el-table-column   label="其他字段" prop="reciptNo" width="200"  align="center" ></el-table-column>
+            <el-table-column   label="其他字段" prop="reciptNo" width="200"  align="center" ></el-table-column>
+            <el-table-column   label="其他字段" prop="reciptNo" width="200"  align="center" ></el-table-column>
+            <el-table-column label="操作" width="200"  align="center" fixed="right">
                 <template slot-scope="scope">
                     <el-button
                         icon="el-icon-edit"
                         type="primary"
                         size="mini"
-                        @click="showBox"
+                        @click="editData(scope)"
                     ></el-button>
                     <el-button
-                        icon="el-icon-location"
-                        type="success"
+                        icon="el-icon-delete"
+                        type="default"
                         size="mini"
-                        @click="showProgressBox(scope.row)"
+                        @click="deleteData(scope)"
                     ></el-button>
                 </template>
             </el-table-column>
@@ -145,16 +146,21 @@ export default {
       console.log(params)
       // 调接口 todo
       this.dataList = [
-        { id: 1, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
-        { id: 2, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
-        { id: 3, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
-        { id: 4, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
-        { id: 5, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
-        { id: 6, reciptNo: '202123012', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' }
+        { id: 1, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
+        { id: 2, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 3, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
+        { id: 4, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 0, createTime: '2020-10-12' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 5, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' },
+        { id: 6, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-12' }
       ]
       this.total = 28
     },
 
+    // 分页组件事件
     handleSizeChange (newSize) {
       this.queryInfo.pagesize = newSize
       this.getdataList()
@@ -163,24 +169,20 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getdataList()
     },
-    // 展示修改地址的对话框
-    showBox () {
+    // 增删改查
+    view () {
       this.addressVisible = true
     },
-    // 弹框关闭事件
-    addressClosed () {
-      this.$refs.addressFormRef.resetFields()
+    editData (item) {
+      console.log('edit')
     },
-    // 查看物流
-    showProgressBox () {
-      this.$http.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/'
-      this.$http.get('/kuaidi/YT4781863654577').then(res => {
-        console.log('落落落落')
-        console.log(res.data.data)
-        this.timeList = res.data.data
-      })
-      this.progressVisible = true
+    deleteData (item) {
+      console.log('delete')
+    },
+    addressClosed (par) {
+      console.log(par)
     }
+
   }
 }
 </script>
