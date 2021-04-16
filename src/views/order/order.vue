@@ -2,67 +2,73 @@
 <div>
   <!-- 卡片视图 -->
   <el-card>
-      <el-row>
-          <el-col :span="8">
-              <el-input placeholder="请输入内容">
-                  <el-button slot="append" icon="el-icon-search"></el-button>
-              </el-input>
-          </el-col>
-      </el-row>
-      <!-- 订单列表数据 , 边框 ，斑马纹 -->
-      <el-table :data="dataList" border stripe  @selection-change="handleSelectionChange">
-        <!-- selection 添加勾选框，fixed固定在左侧 -->
-          <el-table-column type="selection" label="#" align="center" fixed="left"></el-table-column>
-          <el-table-column type="index" label="#" align="center" fixed="left"></el-table-column>
-          <!-- show-overflow-tooltip 宽度过小时显示tooltips -->
-          <el-table-column   label="订单标号" prop="reciptNo" width="120"  show-overflow-tooltip   align="center" ></el-table-column>
+    <el-row>
+        <el-col :span="8">
+            <el-input  v-model="keyWord"
+            @input="inputChange(keyWord)"
+            @change="onChange(keyWord)"
+            placeholder="请输入内容"
+            maxlength="15"
+            clearable
+            >
+                <el-button slot="append" icon="el-icon-search"  @click="searchData(keyWord)"></el-button>
+            </el-input>
+        </el-col>
+    </el-row>
+    <!-- 订单列表数据 , 边框 ，斑马纹 -->
+    <el-table :data="dataList" border stripe  @selection-change="handleSelectionChange" empty-text="暂时没有数据。">
+      <!-- selection 添加勾选框，fixed固定在左侧 -->
+        <el-table-column type="selection" label="#" align="center" fixed="left"></el-table-column>
+        <el-table-column type="index" label="#" align="center" fixed="left"></el-table-column>
+        <!-- show-overflow-tooltip 宽度过小时显示tooltips -->
+        <el-table-column   label="订单标号" prop="reciptNo" width="120"  show-overflow-tooltip   align="center" ></el-table-column>
 
-          <el-table-column   label="联系方式"  prop="phone" width="130"  align="center" >
-          </el-table-column>
-          <el-table-column   label="下单人"  prop="userName" width="100" align="center" >
-          </el-table-column>
-          <el-table-column label="是否付钱" prop="status" width="100" align="center">
-              <!-- 自定义显示的模板 -->
-              <template slot-scope="scope">
-                  <el-tag type="success" v-if="scope.row.status === 1">已付款</el-tag>
-                  <el-tag type="danger" v-if="scope.row.status === 0">未付款</el-tag>
-              </template>
-          </el-table-column>
-          <!-- sortable支持排序,,可以使用sort-method或者sort-by使用自定义的排序规则，
-              formatter格式化显示内容 -->
-          <el-table-column label="下单时间" prop="createTime" width="200" align="center" sortable :formatter="formatter">
-          </el-table-column>
-          <el-table-column   label="其他字段" prop="reciptNo" width="200"     align="center" ></el-table-column>
-          <el-table-column   label="其他字段" prop="reciptNo" min-width="100" align="center" ></el-table-column>
-          <el-table-column   label="其他字段" prop="reciptNo" min-width="170" align="center" ></el-table-column>
-          <el-table-column label="操作" width="200"  align="center" fixed="right">
-              <template slot-scope="scope">
-                  <el-button
-                      icon="el-icon-edit"
-                      type="primary"
-                      size="mini"
-                      @click="editData(scope)"
-                  ></el-button>
-                  <el-button
-                      icon="el-icon-delete"
-                      type="danger"
-                      size="mini"
-                      @click="deleteData(scope)"
-                  ></el-button>
-              </template>
-          </el-table-column>
-      </el-table>
+        <el-table-column   label="联系方式"  prop="phone" width="130"  align="center" >
+        </el-table-column>
+        <el-table-column   label="下单人"  prop="userName" width="100" align="center" >
+        </el-table-column>
+        <el-table-column label="是否付钱" prop="status" width="100" align="center">
+            <!-- 自定义显示的模板 -->
+            <template slot-scope="scope">
+                <el-tag type="success" v-if="scope.row.status === 1">已付款</el-tag>
+                <el-tag type="danger" v-if="scope.row.status === 0">未付款</el-tag>
+            </template>
+        </el-table-column>
+        <!-- sortable支持排序,,可以使用sort-method或者sort-by使用自定义的排序规则，
+            formatter格式化显示内容 -->
+        <el-table-column label="下单时间" prop="createTime" width="200" align="center" sortable :formatter="formatter">
+        </el-table-column>
+        <el-table-column   label="其他字段" prop="reciptNo" width="200"     align="center" ></el-table-column>
+        <el-table-column   label="其他字段" prop="reciptNo" min-width="100" align="center" ></el-table-column>
+        <el-table-column   label="其他字段" prop="reciptNo" min-width="170" align="center" ></el-table-column>
+        <el-table-column label="操作" width="200"  align="center" fixed="right">
+            <template slot-scope="scope">
+                <el-button
+                    icon="el-icon-edit"
+                    type="primary"
+                    size="mini"
+                    @click="editData(scope)"
+                ></el-button>
+                <el-button
+                    icon="el-icon-delete"
+                    type="danger"
+                    size="mini"
+                    @click="deleteData(scope)"
+                ></el-button>
+            </template>
+        </el-table-column>
+    </el-table>
 
-      <!-- 分页区域 -->
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="queryInfo.pagenum"
-          :page-sizes="[5, 10, 15]"
-          :page-size="queryInfo.pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-      ></el-pagination>
+    <!-- 分页区域 -->
+    <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[5, 10, 15]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+    ></el-pagination>
   </el-card>
   <!-- 修改地址的对话框 -->
   <el-dialog
@@ -110,13 +116,15 @@ export default {
   data () {
     return {
       descripts: '列表过滤，以及单个数据的增删改查',
+      keyWord: '', // 模糊查询
+      status: null, //  true,false,null表示全部
+      startTime: '',
+      endTime: '',
+
       queryInfo: {
-        kewWord: '', // 模糊查询
-        status: null, //  true,false,null表示全部
-        startTime: '',
-        endTime: '',
         pagenum: 1, // 页码
         pagesize: 10 // 每页显示条数
+
       },
       total: 0,
 
@@ -145,8 +153,15 @@ export default {
   },
   methods: {
     getdataList () {
-      // const params = this.queryInfo
-      // console.log(params)
+      const params = {
+        keyWord: this.keyWord,
+        status: this.status,
+        startTime: this.startTime,
+        endTime: this.endTime,
+        pagenum: this.queryInfo.pagenum,
+        pagesize: this.queryInfo.pagesize
+      }
+      console.log(params)
       // 调接口 todo
       this.dataList = [
         { id: 1, reciptNo: '20212301212312123123', userName: '棉宝宝', phone: '13532392392', status: 0, createTime: '2020-10-14' },
@@ -161,6 +176,15 @@ export default {
         { id: 6, reciptNo: '20212301212312123123', userName: '222', phone: '13532392392', status: 1, createTime: '2020-10-22' }
       ]
       this.total = 28
+    },
+    inputChange (value) {
+      console.log('持续inputChange,需要正则校验，过滤', value)
+    },
+    onChange (value) {
+      console.log('失去焦点触发Change：', value)
+    },
+    searchData (keyWord) {
+      console.log('keyword：', keyWord)
     },
 
     // 选中事件
