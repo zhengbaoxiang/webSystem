@@ -1,89 +1,40 @@
 <template>
-    <el-container class="home-container">
-        <!-- 头部 -->
-        <el-header>
-            <div>
-                <!-- <img style="margin-left: 15px" src="@/assets/logo.png" alt="" /> -->
-                <span style="margin-left: 20px">后台管理系统欢迎您</span>
-            </div>
-            <div></div>
-            <el-button type="info" @click="logout">退出</el-button>
-        </el-header>
-        <!-- 主体内容 -->
-        <el-container>
-            <!-- 侧边栏内容 -->
-            <el-aside :width="isCollapse ? '64px' : '200px'">
-                <div class="toggle-button" @click="toggleCollapse">|||</div>
-                <el-menu
-                    class="el-menu-vertical-demo"
-                    background-color="#333744"
-                    text-color="#fff"
-                    active-text-color="#409fff"
-                    :unique-opened="true"
-                    :collapse="isCollapse"
-                    :collapse-transition="false"
-                    :router="true"
-                    :default-active="currentPath"
-                >
-                  <li v-for="item in menuList" :key="item.id" >
-                     <!-- 一级菜单 无子菜单，直接选项 el-menu-item,无需模板-->
-                    <el-menu-item
-                      :index="'/home/' + item.path"
-                      @click.native="menuClick(item)"
-                      v-if="!item.children||item.children.length===0"
-                      class="borderRed"
-                    >
-                        <!-- 图标 -->
-                        <i :class="iconsObj[item.id]"></i>
-                        <!-- 文本 -->
-                        <span v-show="!isCollapse">{{ item.authName }}</span>
-                    </el-menu-item>
-                     <!-- 一级菜单 有子菜单-el-submenu   -->
-                    <el-submenu
-                      :index="item.id + ''"
-                      v-else
-                      class="borderGreen"
-                      >
-                        <!-- 一级菜单的模板区 -->
-                        <template slot="title">
-                            <!-- 图标 -->
-                            <i :class="iconsObj[item.id]"></i>
-                            <!-- 文本 -->
-                            <span v-show="!isCollapse">{{ item.authName }}</span>
-                        </template>
-
-                        <!-- 菜单项 -->
-                        <el-menu-item
-                            :index="'/home/' + subItem.path"
-                            v-for="subItem in item.children"
-                            :key="subItem.id"
-                            @click.stop.native="menuClick(subItem)"
-                        >
-                            <template slot="title">
-                                <!-- 图标 -->
-                                <i class="el-icon-menu"></i>
-                                <!-- 文本 -->
-                                <span>{{ subItem.authName }}</span>
-                            </template>
-                        </el-menu-item>
-                    </el-submenu>
-
-                  </li>
-                </el-menu>
-            </el-aside>
-            <!-- 显示内容 -->
-            <el-main>
-              <!-- 面包屑导航区域 -->
-              <el-breadcrumb separator-class="el-icon-arrow-right">
-                  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-                  <el-breadcrumb-item>{{menuTitle}}</el-breadcrumb-item>
-                  <el-breadcrumb-item v-if="subTitle">{{subTitle}}</el-breadcrumb-item>
-              </el-breadcrumb>
-              <!-- 路由占位符 -->
-              <router-view></router-view>
-            </el-main>
-        </el-container>
+  <el-container class="home-container">
+    <!-- 头部 -->
+    <el-header>
+        <div>
+            <!-- <img style="margin-left: 15px" src="@/assets/logo.png" alt="" /> -->
+            <span style="margin-left: 20px">后台管理系统欢迎您</span>
+        </div>
+        <div></div>
+        <el-button type="info" @click="logout">退出</el-button>
+    </el-header>
+    <!-- 主体内容 -->
+    <el-container>
+      <!-- 侧边栏内容 -->
+      <el-aside :width="isCollapse ? '64px' : '200px'">
+        <div class="toggle-button" @click="toggleCollapse">|||</div>
+        <AsideNav
+          :dataList="menuList"
+          :defaultItem="currentPath"
+          :isCollapse="isCollapse"
+          @emitClick="menuClick"
+        >
+        </AsideNav>
+      </el-aside>
+      <!-- 显示内容 -->
+      <el-main>
+        <!-- 面包屑导航区域 -->
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>{{menuTitle}}</el-breadcrumb-item>
+            <el-breadcrumb-item v-if="subTitle">{{subTitle}}</el-breadcrumb-item>
+        </el-breadcrumb>
+        <!-- 路由占位符 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
+  </el-container>
 </template>
 <script>
 export default {
@@ -92,14 +43,6 @@ export default {
       menuList: [], // 左侧菜单数据
       menuTitle: '', // 一级菜单
       subTitle: '', // 二级菜单
-      iconsObj: {
-        100: 'iconfont icon-baobiao',
-        101: 'iconfont icon-tijikongjian',
-        102: 'iconfont icon-danju',
-        103: 'iconfont icon-shangpin',
-        104: 'iconfont icon-user',
-        10086: 'el-icon-question'
-      },
       isCollapse: false
     }
   },
@@ -116,13 +59,13 @@ export default {
   },
   watch: {
     currentPath (newVal, oldVal) {
-      console.log('watch=>>>>', newVal, oldVal)
+      // console.log('watch=>>>>', newVal, oldVal)
     }
   },
   computed: {
     currentPath () {
       const path = this.$route.path
-      console.log('computed=>>>>', path)
+      // console.log('computed=>>>>', path)
       this.getBreadcrumb(path)
       return path
     }
@@ -147,18 +90,26 @@ export default {
     //     })
       const res = {
         'data': [
+          { 'id': 10086,
+            'authName': '欢迎首页',
+            'icon': 'iconfont icon-shangpin',
+            'path': 'welcome'
+          },
           { 'id': 100,
             'authName': '数据总览',
+            'icon': 'iconfont icon-baobiao',
             'path': 'reports',
             'children': []
           },
           { 'id': 101,
             'authName': '订单管理',
+            'icon': 'iconfont icon-tijikongjian',
             'path': 'orders',
             'children': [{ 'id': 107, 'authName': '订单列表', 'path': 'orders', 'children': [] }]
           },
           { 'id': 102,
             'authName': '权限管理',
+            'icon': 'iconfont icon-danju',
             'path': 'rights',
             'children': [
               { 'id': 111, 'authName': '角色列表', 'path': 'roles', 'children': [] },
@@ -166,6 +117,7 @@ export default {
           },
           { 'id': 103,
             'authName': '商品管理',
+            'icon': 'iconfont icon-shangpin',
             'path': 'goods',
             'children': [
               { 'id': 104, 'authName': '商品列表', 'path': 'goods', 'children': [] },
@@ -175,12 +127,9 @@ export default {
           },
           { 'id': 104,
             'authName': '用户管理',
+            'icon': 'iconfont icon-user',
             'path': 'users',
             'children': [{ 'id': 1, 'authName': '用户列表', 'path': 'users', 'children': [] }]
-          },
-          { 'id': 10086,
-            'authName': '关于我们',
-            'path': 'welcome'
           }
 
         ],
@@ -194,15 +143,14 @@ export default {
     },
     // 可以手动跳转，加传参
     menuClick (item) {
-      // console.log(item)
+      console.log('menuClick', item)
       this.isCollapse = false // 只要点击了跳转菜单，就展开
-      console.log('isCollapse', this.isCollapse)
-      // this.$router.push({
-      //   path: '/home/' + item.path,
-      //   query: {
-      //     Id: item.id
-      //   }
-      // })
+      this.$router.push({
+        path: '/home/' + item.path,
+        query: {
+          Id: item.id
+        }
+      })
     },
     // 自动获取导航面包屑，无需单独在页面内写死
     getBreadcrumb (path) {
@@ -211,7 +159,7 @@ export default {
         if (children.length > 0) {
           children.forEach((subItem) => {
             if (path.includes(subItem.path)) {
-              console.log('获取菜单标题', subItem)
+              // console.log('获取菜单标题', subItem)
               // 获取菜单标题
               this.menuTitle = item.authName
               this.subTitle = subItem.authName
@@ -219,7 +167,7 @@ export default {
           })
         } else {
           if (path.includes(item.path)) {
-            console.log('获取菜单标题', item)
+            // console.log('获取菜单标题', item)
             // 获取菜单标题
             this.menuTitle = item.authName
             this.subTitle = ''

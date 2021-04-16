@@ -141,13 +141,13 @@ const Utils = {
   },
 
   // 统一储存变量方法
-  // 后续工作台迁移到我要管家 可统一修改
   setItem: function (key, vaule) {
     window.localStorage.setItem(key, vaule)
   },
   getItem: function (key) {
     return window.localStorage.getItem(key)
   },
+
   // 获取str中的参数并转换为map返回
   getParamsMap: function (str) {
     let num

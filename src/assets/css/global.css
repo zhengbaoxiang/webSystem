@@ -126,6 +126,15 @@ h1,h2,h3,h4,h5{font-size:100%;font-weight:normal;}
   height: 100%;
 }
 
+/* 导航栏 显示隐藏，去掉元素结构限制 ">" */
+.el-menu--collapse .el-menu-item span, .el-menu--collapse .el-submenu>.el-submenu__title span {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: inline-block;
+}
+
 .el-table {
   margin-top: 15px;
   font-size: 12px;
