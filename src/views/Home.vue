@@ -145,6 +145,10 @@ export default {
     menuClick (item) {
       console.log('menuClick', item)
       this.isCollapse = false // 只要点击了跳转菜单，就展开
+      // 处理同一个地址重复点击会报错 NavigationDuplicated
+      if (this.$route.path.includes(item.path)) {
+        return
+      }
       this.$router.push({
         path: '/home/' + item.path,
         query: {
