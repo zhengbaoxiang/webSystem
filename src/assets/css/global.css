@@ -33,6 +33,9 @@ h1,h2,h3,h4,h5{font-size:100%;font-weight:normal;}
 .fr {
   float: right;
 }
+.flex{
+  display: flex;
+}
 
 /* 字体颜色 */
 .font10 {
@@ -132,7 +135,10 @@ h1,h2,h3,h4,h5{font-size:100%;font-weight:normal;}
 .el-card__body {
   height: 100%;
 }
-
+/* 行内表单，inline-block label与content会换行,todo */
+/* .el-form--inline .el-form-item{
+  display: inline-block
+} */
 /* 导航栏 显示隐藏，去掉元素结构限制 ">" */
 .el-menu--collapse .el-menu-item span, .el-menu--collapse .el-submenu>.el-submenu__title span {
   height: 0;

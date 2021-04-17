@@ -10,6 +10,7 @@ import style from './assets/css/global.css' // 导入全局样式表
 import './assets/fonts/iconfont.css'// 导入字体图标
 import axios from 'axios'
 import axiosUtils from './utils/axiosUtils'
+import Utils from './utils/myUtils'
 import Api from './utils/api'
 import components from './components/index'
 
@@ -26,6 +27,8 @@ Vue.prototype.eventHub = new Vue({})
 Vue.prototype.$http = axios
 Vue.prototype.$api = Api
 
+// 日期格式化函数,避免eslint 报错
+
 // 拿到全局配置项，存储在window对象下，window.localConfig
 axios.get('/localConfig.json').then((response) => {
   window.localConfig = response.data
@@ -37,3 +40,6 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+// eslint-disable-next-line no-extend-native
+Date.prototype.dateFormat = Utils.dateFormat

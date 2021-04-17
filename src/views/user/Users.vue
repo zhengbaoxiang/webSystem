@@ -251,6 +251,12 @@ export default {
       //     userinfo.mg_state = !userinfo.mg_state
       //     return this.$message.error('更新用户状态失败！')
       //   }
+      // closeAll()
+      this.$message.closeAll()
+      // this.$message({
+      //   message: '标准写法',
+      //   type: 'success'
+      // })
       this.$message.success('更新用户状态成功')
       // })
     },

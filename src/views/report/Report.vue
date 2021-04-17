@@ -5,10 +5,8 @@
     </el-card>
     <el-container>
       <el-col :span="12">
-        左侧内九点四十了房间啊是的路口附近开了
       </el-col>
       <el-col :span="12">
-        右侧就立刻就发的是旅客交罚款劳动纠纷
       </el-col>
     </el-container>
     <el-card >

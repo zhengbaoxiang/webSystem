@@ -82,5 +82,6 @@ Vue.use(Upload)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
 
+// 单独引用时需要添加，全部引用会自动添加到原型
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
