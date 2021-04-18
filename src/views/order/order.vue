@@ -2,7 +2,7 @@
 <div>
   <!-- 卡片视图 -->
   <el-card>
-    <el-form :inline="true"  class="search-form" label-width="80px">
+    <el-form :inline="true"  class="search-form" label-width="70px">
       <el-form-item label="查询" label-width="48px">
          <el-input  v-model="keyWord" placeholder="请输入内容" maxlength="15" clearable
               @input="keyWord = inputChange(keyWord)"
@@ -12,10 +12,10 @@
               <el-button slot="append" icon="el-icon-search"  @click="searchData(keyWord)"></el-button>
             </el-input>
       </el-form-item>
-      <el-form-item label="付款" label-width="60px">
-        <el-select v-model="status" placeholder="请选择" clearable @change="optionChange" >
+      <el-form-item label="支付方式" label-width="80px">
+        <el-select v-model="payWay" placeholder="请选择" clearable @change="optionChange" >
           <el-option
-            v-for="item in statusOptions"
+            v-for="item in payOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -46,7 +46,7 @@
         <el-button  @click="reset" class="ml20">重置</el-button>
       </el-form-item>
       <el-form-item class="fr">
-        <el-button  @click="createItem" >新增</el-button>
+        <el-button  @click="createItem" type="primary">新增</el-button>
       </el-form-item>
     </el-form>
     <!-- 订单列表数据 , 边框 ，斑马纹 -->
@@ -188,7 +188,7 @@ export default {
     return {
       descripts: '列表过滤，以及单个数据的增删改查',
       keyWord: '', // 模糊查询
-      status: '', //  1,0,null表示全部
+      payWay: '', //  1,2,3,null表示全部
       startTime: '',
       endTime: '',
 
@@ -197,13 +197,19 @@ export default {
         pagesize: 10 // 每页显示条数
 
       },
-      statusOptions: [
+      payOptions: [
         {
-          value: '0',
-          label: '未付款'
-        }, {
           value: '1',
-          label: '已付款'
+          label: '支付宝'
+        }, {
+          value: '2',
+          label: '微信'
+        }, {
+          value: '3',
+          label: '银行卡'
+        }, {
+          value: '4',
+          label: '现金'
         }
       ],
       dateSelected: null,
@@ -293,7 +299,7 @@ export default {
     getdataList () {
       const params = {
         keyWord: this.keyWord,
-        status: this.status ? parseInt(this.status) : null,
+        payWay: this.payWay,
         startTime: this.startTime,
         endTime: this.endTime,
         pagenum: this.queryInfo.pagenum,
@@ -341,9 +347,9 @@ export default {
         })
       }
       //
-      if ([0, 1].includes(params.status)) {
+      if (params.payWay) {
         filterData = filterData.filter(item => {
-          if (item.status === params.status) {
+          if (item.payWay === params.payWay) {
             return true
           } else {
             return false
