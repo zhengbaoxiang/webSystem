@@ -83,8 +83,11 @@ h1,h2,h3,h4,h5{font-size:100%;font-weight:normal;}
 .text-grey {
   color: #8d929e;
 }
+.text-blue {
+  color: #409EFF;
+}
 .text-green {
-  color: #1fc1c9;
+  color: #67C23A;
 }
 .text-red {
   color: #f27967;
@@ -121,6 +124,11 @@ h1,h2,h3,h4,h5{font-size:100%;font-weight:normal;}
 .plr15 {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+
+.boxShadow{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
 }
 
 /* el UI组件 */
